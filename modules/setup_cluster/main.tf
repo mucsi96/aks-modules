@@ -33,6 +33,8 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   dns_prefix                        = azurerm_resource_group.resource_group.name
   role_based_access_control_enabled = true
   kubernetes_version                = var.azure_k8s_version
+  node_os_channel_upgrade           = "NodeImage"
+  automatic_channel_upgrade         = "node-image"
 
   identity {
     type = "SystemAssigned"
@@ -44,6 +46,10 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     vm_size         = var.azure_vm_size
     os_disk_size_gb = var.azure_vm_disk_size_gb
     vnet_subnet_id  = azurerm_subnet.subnet.id
+
+    upgrade_settings {
+      max_surge = 1
+    }
   }
 
   network_profile {

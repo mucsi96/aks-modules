@@ -1,73 +1,83 @@
 {
-    // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "type": "shell",
-        "command": "bash",
-        "label": "Create cluster",
-        "args": ["scripts/create.sh"],
-        "options": {
-          "cwd": "${workspaceFolder}"
-        },
-        "problemMatcher": []
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "bash",
+      "label": "Create cluster",
+      "args": ["scripts/create.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
-      {
-        "type": "shell",
-        "command": "bash",
-        "label": "Cleanup",
-        "args": ["scripts/run_playbook.sh", "playbooks/delete.yml"],
-        "options": {
-          "cwd": "${workspaceFolder}"
-        },
-        "problemMatcher": []
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "bash",
+      "label": "Create remote state",
+      "args": ["create.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}/remote_state"
       },
-      {
-        "type": "shell",
-        "command": "bash",
-        "label": "Install dependencies",
-        "args": ["scripts/install_dependencies.sh"],
-        "options": {
-          "cwd": "${workspaceFolder}"
-        },
-        "problemMatcher": []
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "bash",
+      "label": "Cleanup",
+      "args": ["scripts/run_playbook.sh", "playbooks/delete.yml"],
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
-      {
-        "type": "shell",
-        "command": "az",
-        "label": "Login to Azure",
-        "args": ["login"],
-        "options": {
-          "cwd": "${workspaceFolder}"
-        },
-        "problemMatcher": []
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "bash",
+      "label": "Install dependencies",
+      "args": ["scripts/install_dependencies.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
-      {
-        "type": "shell",
-        "command": "open http://localhost:9000/dashboard/ && kubectl --kubeconfig .kube/admin-config port-forward $(kubectl --kubeconfig .kube/admin-config get pods --namespace traefik --output=name) 9000:9000",
-        "label": "Open Traeffik dashboard",
-        "options": {
-          "cwd": "${workspaceFolder}"
-        },
-        "problemMatcher": []
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "az",
+      "label": "Login to Azure",
+      "args": ["login"],
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
-      {
-        "type": "shell",
-        "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
-        "label": "Encrypt vault",
-        "problemMatcher": []
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "open http://localhost:9000/dashboard/ && kubectl --kubeconfig .kube/admin-config port-forward $(kubectl --kubeconfig .kube/admin-config get pods --namespace traefik --output=name) 9000:9000",
+      "label": "Open Traeffik dashboard",
+      "options": {
+        "cwd": "${workspaceFolder}"
       },
-      {
-        "type": "shell",
-        "command": "ansible-vault decrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
-        "label": "Decrypt vault",
-        "problemMatcher": []
-      },
-      {
-        "type": "shell",
-        "command": "ansible-vault view vars/vault.yaml --vault-password-file .ansible/vault_key",
-        "label": "View vault",
-        "problemMatcher": []
-      }
-    ]
-  }
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "label": "Encrypt vault",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "ansible-vault decrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "label": "Decrypt vault",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "ansible-vault view vars/vault.yaml --vault-password-file .ansible/vault_key",
+      "label": "View vault",
+      "problemMatcher": []
+    }
+  ]
+}

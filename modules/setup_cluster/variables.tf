@@ -6,7 +6,6 @@ variable "azure_resource_group_name" {
 variable "azure_location" {
   description = "The Azure location to deploy resources"
   type        = string
-  default     = "centralindia"
 }
 
 variable "azure_vm_size" {
