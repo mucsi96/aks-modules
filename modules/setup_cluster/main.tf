@@ -57,3 +57,17 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     load_balancer_sku = "basic"
   }
 }
+
+resource "azurerm_role_assignment" "aks_principal_as_subnet_network_contributor" {
+  scope                = azurerm_subnet.subnet.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.kubernetes_cluster.identity[0].principal_id
+}
+
+resource "azurerm_public_ip" "public_ip" {
+  name                = azurerm_resource_group.resource_group.name
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
+  allocation_method   = "Static"
+  sku                 = "Basic"
+}
