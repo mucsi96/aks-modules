@@ -9,8 +9,3 @@ variable "azure_location" {
   default     = "centralindia"
 }
 
-variable "remote_state_directory" {
-  description = "The directory to store the remote state"
-  type        = string
-}
-

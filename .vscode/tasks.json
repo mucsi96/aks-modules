@@ -25,6 +25,16 @@
     {
       "type": "shell",
       "command": "bash",
+      "label": "Pull kube admin config",
+      "args": ["scripts/pull_kube_admin_config.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "bash",
       "label": "Cleanup",
       "args": ["scripts/run_playbook.sh", "playbooks/delete.yml"],
       "options": {
