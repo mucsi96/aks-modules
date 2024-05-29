@@ -2,3 +2,5 @@
 - [AzureDNS](https://cert-manager.io/docs/configuration/acme/dns01/azuredns/)
 - [terraform-azure-aks-example](https://github.com/rgl/terraform-azure-aks-example)
 - [Demystifying Service Principals – Managed Identities](https://devblogs.microsoft.com/devops/demystifying-service-principals-managed-identities)
+- [IPInfo](https://ipinfo.io/)
+- [ASN IP ranges](https://github.com/ipverse/asn-ip)

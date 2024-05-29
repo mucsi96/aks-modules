@@ -15,10 +15,10 @@
     {
       "type": "shell",
       "command": "bash",
-      "label": "Create remote state",
-      "args": ["create.sh"],
+      "label": "Init",
+      "args": ["init.sh"],
       "options": {
-        "cwd": "${workspaceFolder}/remote_state"
+        "cwd": "${workspaceFolder}/init"
       },
       "problemMatcher": []
     },
