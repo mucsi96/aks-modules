@@ -61,3 +61,15 @@ module "setup_ingress_controller" {
   ip_range                  = data.azurerm_key_vault_secret.ip_range.value
   letsencrypt_email         = data.azurerm_key_vault_secret.letsencrypt_email.value
 }
+
+module "create_app_namespace" {
+  depends_on = [module.setup_cluster]
+
+  source                    = "./modules/create_app_namespace"
+  azure_resource_group_name = local.azure_resource_group_name
+  k8s_namespace             = "demo"
+}
+
+output "demo_namespace_k8s_user_config" {
+  value = module.create_app_namespace.k8s_user_config
+}
