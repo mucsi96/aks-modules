@@ -11,11 +11,7 @@ variable "azure_location" {
 variable "dns_zone" {
   description = "The DNS zone to use for the cluster"
   type        = string
-}
-
-variable "k8s_admin_config_path" {
-  description = "The path to the kubeconfig file"
-  type        = string
+  sensitive   = true
 }
 
 variable "traefik_chart_version" {
@@ -26,4 +22,11 @@ variable "traefik_chart_version" {
 variable "ip_range" {
   description = "The IP range to allow traffic from"
   type        = string
+  sensitive   = true
+}
+
+variable "letsencrypt_email" {
+  description = "The email address to use for Let's Encrypt"
+  type        = string
+  sensitive   = true
 }

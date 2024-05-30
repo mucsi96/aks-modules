@@ -25,11 +25,18 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   name                              = var.azure_resource_group_name
   location                          = var.azure_location
   resource_group_name               = var.azure_resource_group_name
-  dns_prefix                        = var.azure_resource_group_name
+  dns_prefix                        = var.azure_resource_group_name # 
   role_based_access_control_enabled = true
-  kubernetes_version                = var.azure_k8s_version
-  node_os_channel_upgrade           = "NodeImage"
-  automatic_channel_upgrade         = "node-image"
+  # see https://learn.microsoft.com/en-us/azure/aks/cluster-configuration#oidc-issuer
+  # see https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection
+  # see https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-issuer-discovery
+  oidc_issuer_enabled = true
+  # see https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview
+  # see https://azure.github.io/azure-workload-identity/docs/
+  workload_identity_enabled = true
+  kubernetes_version        = var.azure_k8s_version
+  node_os_channel_upgrade   = "NodeImage"
+  automatic_channel_upgrade = "node-image"
 
   identity {
     type = "SystemAssigned"
@@ -61,7 +68,7 @@ resource "azurerm_role_assignment" "aks_principal_as_subnet_network_contributor"
 
 resource "azurerm_public_ip" "public_ip" {
   name                = var.azure_resource_group_name
-  resource_group_name = var.azure_resource_group_name
+  resource_group_name = azurerm_kubernetes_cluster.kubernetes_cluster.node_resource_group
   location            = var.azure_location
   allocation_method   = "Static"
   sku                 = "Basic"

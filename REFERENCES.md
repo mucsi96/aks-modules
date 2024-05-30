@@ -4,3 +4,4 @@
 - [Demystifying Service Principals – Managed Identities](https://devblogs.microsoft.com/devops/demystifying-service-principals-managed-identities)
 - [IPInfo](https://ipinfo.io/)
 - [ASN IP ranges](https://github.com/ipverse/asn-ip)
+- [Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview?tabs=javascript)
