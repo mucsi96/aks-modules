@@ -124,6 +124,7 @@ resource "kubernetes_secret" "secret" {
   }
 
   type = "kubernetes.io/service-account-token"
+  wait_for_service_account_token = true
 }
 
 resource "kubernetes_role_binding" "role_binding" {

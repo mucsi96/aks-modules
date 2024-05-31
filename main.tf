@@ -62,7 +62,7 @@ module "setup_ingress_controller" {
   letsencrypt_email         = data.azurerm_key_vault_secret.letsencrypt_email.value
 }
 
-module "create_app_namespace" {
+module "create_demo_app_namespace" {
   depends_on = [module.setup_cluster]
 
   source                    = "./modules/create_app_namespace"
@@ -71,5 +71,6 @@ module "create_app_namespace" {
 }
 
 output "demo_namespace_k8s_user_config" {
-  value = module.create_app_namespace.k8s_user_config
+  value = module.create_demo_app_namespace.k8s_user_config
+  sensitive = true
 }

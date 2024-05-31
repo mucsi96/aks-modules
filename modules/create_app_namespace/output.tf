@@ -5,12 +5,12 @@ kind: Config
 clusters:
   - name: cluster
     cluster:
-      server: ${kubernetes_cluster.kube_config.0.host}
-      certificate-authority-data: ${kubernetes_cluster.kube_config.0.cluster_ca_certificate}
+      server: ${yamldecode(data.azurerm_kubernetes_cluster.kubernetes_cluster.kube_config_raw).clusters[0].cluster.server}
+      certificate-authority-data: ${yamldecode(data.azurerm_kubernetes_cluster.kubernetes_cluster.kube_config_raw).clusters[0].cluster.certificate-authority-data}
 users:
   - name: user
     user:
-      token: ${kuberntest_secret.service_account_secret.0.token}
+      token: ${kubernetes_secret.secret.data.token}
 contexts:
   - name: default
     context:
