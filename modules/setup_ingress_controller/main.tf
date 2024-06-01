@@ -55,7 +55,7 @@ resource "azurerm_federated_identity_credential" "dns_challenge_identity_credent
   name                = "dns_challenge_identity_credential"
   parent_id           = azurerm_user_assigned_identity.dns_challenge_identity.id
   issuer              = data.azurerm_kubernetes_cluster.kubernetes_cluster.oidc_issuer_url
-  subject             = "system:serviceaccount:${helm_release.traefik.namespace}:${kubernetes_service_account.service_account.metadata[0].name}"
+  subject             = "system:serviceaccount:${kubernetes_service_account.service_account.metadata[0].namespace}:${kubernetes_service_account.service_account.metadata[0].name}"
   audience            = ["api://AzureADTokenExchange"]
 }
 
@@ -75,6 +75,10 @@ resource "kubernetes_service_account" "service_account" {
   metadata {
     name      = "traefik"
     namespace = kubernetes_namespace.k8s_namespace.metadata[0].name
+    annotations = {
+      "azure.workload.identity/client-id" = azurerm_user_assigned_identity.dns_challenge_identity.client_id
+      "azure.workload.identity/tenant-id" = data.azurerm_client_config.current.tenant_id
+    }
   }
 }
 
@@ -106,25 +110,24 @@ resource "helm_release" "traefik" {
       }
     }
     env = [
-      # {
-      # name  = "AZURE_SUBSCRIPTION_ID"
-      # value = azurerm_client_config.current.subscription_id
-      # }, {
-      # name  = "AZURE_TENANT_ID"
-      # value = azurerm_client_config.current.tenant_id
-      # }, {
-      # name  = "AZURE_RESOURCE_GROUP"
-      # value = var.azure_resource_group_name
-      # }, 
+      {
+        name  = "AZURE_SUBSCRIPTION_ID"
+        value = data.azurerm_client_config.current.subscription_id
+      },
+      {
+        name  = "AZURE_RESOURCE_GROUP"
+        value = var.azure_resource_group_name
+      },
       {
         name  = "AZURE_AUTH_METHOD"
         value = "wli"
-    }]
+      }
+    ]
     serviceAccount = {
       name = kubernetes_service_account.service_account.metadata.0.name
     }
     deployment = {
-      podAnnotations = {
+      podLabels = {
         "azure.workload.identity/use" = "true"
       }
       initContainers = [
@@ -167,7 +170,5 @@ resource "helm_release" "traefik" {
         "service.beta.kubernetes.io/azure-allowed-ip-ranges"            = var.ip_range
       }
     }
-
   })]
-
 }

@@ -52,6 +52,7 @@ resource "kubernetes_role" "role" {
       "get",
       "create",
       "patch",
+      "list",
     ]
   }
 
@@ -61,11 +62,13 @@ resource "kubernetes_role" "role" {
     ]
     resources = [
       "deployments",
+      "replicasets"
     ]
     verbs = [
       "get",
       "create",
       "patch",
+      "list"
     ]
   }
 
@@ -123,7 +126,7 @@ resource "kubernetes_secret" "secret" {
     }
   }
 
-  type = "kubernetes.io/service-account-token"
+  type                           = "kubernetes.io/service-account-token"
   wait_for_service_account_token = true
 }
 
