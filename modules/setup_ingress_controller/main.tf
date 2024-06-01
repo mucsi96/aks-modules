@@ -38,9 +38,17 @@ resource "azurerm_dns_zone" "dns_zone" {
 resource "azurerm_dns_a_record" "dns_a_record" {
   resource_group_name = var.azure_resource_group_name
   zone_name           = azurerm_dns_zone.dns_zone.name
-  name                = "*"
-  ttl                 = 300
+  name                = var.azure_resource_group_name
+  ttl                 = 3600
   records             = [data.azurerm_public_ip.public_ip.ip_address]
+}
+
+resource "azurerm_dns_cname_record" "name" {
+  resource_group_name = var.azure_resource_group_name
+  zone_name           = azurerm_dns_zone.dns_zone.name
+  name                = "*.${var.azure_resource_group_name}"
+  ttl                 = 3600
+  record              = "${var.azure_resource_group_name}.${var.dns_zone}"
 }
 
 resource "azurerm_user_assigned_identity" "dns_challenge_identity" {
@@ -100,8 +108,8 @@ resource "helm_release" "traefik" {
     certResolvers = {
       letsencrypt = {
         email    = var.letsencrypt_email
-        caServer = "https://acme-staging-v02.api.letsencrypt.org/directory" # Staging server
-        # caServer = "https://acme-v02.api.letsencrypt.org/directory" # Production server
+        # caServer = "https://acme-staging-v02.api.letsencrypt.org/directory" # Staging server
+        caServer = "https://acme-v02.api.letsencrypt.org/directory" # Production server
         dnsChallenge = {
           provider         = "azuredns"
           delayBeforeCheck = 10
