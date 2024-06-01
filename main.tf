@@ -25,9 +25,10 @@ module "setup_cluster" {
   azure_k8s_version         = local.azure_k8s_version
 }
 
-output "k8s_admin_config" {
-  value     = module.setup_cluster.k8s_admin_config
-  sensitive = true
+resource "azurerm_key_vault_secret" "k8s_admin_config" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "k8s-admin-config"
+  value        = module.setup_cluster.k8s_admin_config
 }
 
 data "azurerm_key_vault" "kv" {
@@ -70,7 +71,8 @@ module "create_demo_app_namespace" {
   k8s_namespace             = "demo"
 }
 
-output "demo_namespace_k8s_user_config" {
-  value = module.create_demo_app_namespace.k8s_user_config
-  sensitive = true
+resource "azurerm_key_vault_secret" "demo_namespace_k8s_user_config" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "demo-namespace-k8s-user-config"
+  value        = module.create_demo_app_namespace.k8s_user_config
 }

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 mkdir -p .kube
-terraform output -raw k8s_admin_config > .kube/admin-config
+az keyvault secret show --vault-name p02 --name k8s-admin-config --query value --output tsv > .kube/admin-config
