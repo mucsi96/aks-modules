@@ -2,6 +2,8 @@ provider "azurerm" {
   features {}
 }
 
+provider "azuread" {}
+
 provider "kubernetes" {
   host                   = module.setup_cluster.k8s_host
   client_certificate     = module.setup_cluster.k8s_client_certificate
@@ -75,4 +77,28 @@ resource "azurerm_key_vault_secret" "demo_namespace_k8s_user_config" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "demo-namespace-k8s-user-config"
   value        = module.create_demo_app_namespace.k8s_user_config
+}
+
+module "setup_identity_provider" {
+  source                    = "./modules/setup_identity_provider"
+  azure_resource_group_name = local.azure_resource_group_name
+  azure_location            = local.azure_location
+}
+
+resource "azurerm_key_vault_secret" "identity_provider_client_id" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "identity-provider-client-id"
+  value        = module.setup_identity_provider.client_id
+}
+
+resource "azurerm_key_vault_secret" "identity_provider_client_secret" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "identity-provider-client-secret"
+  value        = module.setup_identity_provider.client_secret
+}
+
+resource "azurerm_key_vault_secret" "identity_provider_issuer" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "identity-provider-issuer"
+  value        = module.setup_identity_provider.issuer
 }
