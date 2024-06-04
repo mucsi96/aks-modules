@@ -1,3 +1,5 @@
+provider "random" {}
+
 provider "azurerm" {
   features {}
 }
@@ -97,8 +99,26 @@ resource "azurerm_key_vault_secret" "identity_provider_client_secret" {
   value        = module.setup_identity_provider.client_secret
 }
 
+resource "azurerm_key_vault_secret" "identity_provider_client_scope" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "identity-provider-client-scope"
+  value        = module.setup_identity_provider.client_scope
+}
+
 resource "azurerm_key_vault_secret" "identity_provider_issuer" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "identity-provider-issuer"
   value        = module.setup_identity_provider.issuer
+}
+
+resource "azurerm_key_vault_secret" "test_user_email" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "test-user-email"
+  value        = module.setup_identity_provider.test_user_email
+}
+
+resource "azurerm_key_vault_secret" "test_user_password" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "test-user-password"
+  value        = module.setup_identity_provider.test_user_password
 }

@@ -12,3 +12,18 @@ output "issuer" {
   value     = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
   sensitive = true
 }
+
+output "test_user_email" {
+  value     = azuread_user.test_user.user_principal_name
+  sensitive = true
+}
+
+output "test_user_password" {
+  value     = random_password.test_user_password.result
+  sensitive = true
+}
+
+output "client_scope" {
+  value     = "${azuread_application_identifier_uri.identifier_uri.identifier_uri}/${azuread_application_permission_scope.identity_provider_default_scope.value}"
+  sensitive = true
+}

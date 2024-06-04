@@ -2,4 +2,4 @@
 
 brew update && brew install azure-cli terraform
 
-terraform init
+terraform init --upgrade
