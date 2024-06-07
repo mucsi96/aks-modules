@@ -1,13 +1,20 @@
-locals {
-  app_uri = "https://${data.azuread_domains.aad_domains.domains[0].domain_name}/traefik"
-}
+data "azurerm_client_config" "current" {}
+
+resource "random_uuid" "traefik_dashboard_access_role_id" {}
 
 resource "random_uuid" "traefik_dashboard_access_scope_id" {}
 
 resource "azuread_application" "traefik" {
-  display_name    = "Traefik"
-  identifier_uris = ["${local.app_uri}"]
-  owners          = [data.azurerm_client_config.current.object_id]
+  display_name = "Traefik"
+  owners       = [data.azurerm_client_config.current.object_id]
+
+  app_role {
+    id                   = random_uuid.traefik_dashboard_access_role_id.result
+    allowed_member_types = ["User"]
+    description          = "Allow access to the Traefik Dashboard"
+    display_name         = "Dashboard.Viewer"
+    value                = "Dashboard.Viewer"
+  }
 
   api {
     requested_access_token_version = 2
@@ -18,5 +25,41 @@ resource "azuread_application" "traefik" {
       id                         = random_uuid.traefik_dashboard_access_scope_id.result
       value                      = "dashboard-access"
     }
+  }
+}
+
+resource "azuread_application_identifier_uri" "app_uri" {
+  application_id = azuread_application.traefik.id
+  identifier_uri = "api://${azuread_application.traefik.client_id}"
+}
+
+resource "azuread_service_principal" "token_agent_service_principal" {
+  client_id = azuread_application.traefik.client_id
+}
+
+resource "azuread_app_role_assignment" "main_user_app_role_assignment" {
+  app_role_id         = random_uuid.traefik_dashboard_access_role_id.result
+  principal_object_id = data.azurerm_client_config.current.object_id
+  resource_object_id  = azuread_service_principal.token_agent_service_principal.object_id
+}
+
+output "app" {
+  value = {
+    id        = azuread_application.traefik.id
+    object_id = azuread_service_principal.token_agent_service_principal.object_id
+  }
+}
+
+output "dashboard_access_scope" {
+  value = {
+    id   = random_uuid.traefik_dashboard_access_scope_id.result
+    name = "${azuread_application_identifier_uri.app_uri.identifier_uri}/dashboard-access"
+  }
+}
+
+output "dashboard_access_role" {
+  value = {
+    id   = random_uuid.traefik_dashboard_access_role_id.result
+    name = "Dashboard.Viewer"
   }
 }
