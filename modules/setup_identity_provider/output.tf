@@ -1,5 +1,5 @@
 output "client_id" {
-  value     = azuread_application_registration.identity_provider.client_id
+  value     = azuread_application.token_agent.client_id
   sensitive = true
 }
 
@@ -20,10 +20,5 @@ output "test_user_email" {
 
 output "test_user_password" {
   value     = random_password.test_user_password.result
-  sensitive = true
-}
-
-output "client_scope" {
-  value     = "${azuread_application_identifier_uri.identifier_uri.identifier_uri}/${azuread_application_permission_scope.identity_provider_default_scope.value}"
   sensitive = true
 }

@@ -5,48 +5,45 @@ data "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   resource_group_name = var.azure_resource_group_name
 }
 
-resource "azuread_application_registration" "identity_provider" {
-  display_name = "Identity Provider"
+resource "random_uuid" "admin_role_id" {}
+
+resource "random_uuid" "user_role_id" {}
+
+resource "azuread_application" "token_agent" {
+  display_name = "Token Agent"
+  owners       = [data.azurerm_client_config.current.object_id]
+
+  app_role {
+    id                   = random_uuid.admin_role_id.result
+    allowed_member_types = ["User"]
+    description          = "Admin role"
+    display_name         = "Admin"
+    value                = "admin"
+  }
+
+  app_role {
+    id                   = random_uuid.user_role_id.result
+    allowed_member_types = ["User"]
+    description          = "User role"
+    display_name         = "User"
+    value                = "user"
+  }
+
+  web {
+    redirect_uris = ["http://localhost:8080/callback", "https://auth.auth-tools.home/callback"]
+  }
 }
 
-resource "azuread_service_principal" "identity_provider_service_principal" {
-  client_id = azuread_application_registration.identity_provider.client_id
-  owners    = [data.azurerm_client_config.current.object_id]
-}
-
-resource "azuread_application_owner" "owner" {
-  application_id  = azuread_application_registration.identity_provider.id
-  owner_object_id = data.azurerm_client_config.current.object_id
-}
-
-resource "azuread_application_identifier_uri" "identifier_uri" {
-  application_id = azuread_application_registration.identity_provider.id
-  identifier_uri = "https://${data.azuread_domains.aad_domains.domains[0].domain_name}/identity-provider"
-}
-
-resource "azuread_application_redirect_uris" "redirect_uris" {
-  application_id = azuread_application_registration.identity_provider.id
-  type           = "Web"
-  redirect_uris  = ["http://localhost:8080/callback", "https://auth.auth-tools.home/callback"]
-}
-
-resource "random_uuid" "identity_provider_default_scope_id" {}
-
-resource "azuread_application_permission_scope" "identity_provider_default_scope" {
-  application_id             = azuread_application_registration.identity_provider.id
-  scope_id                   = random_uuid.identity_provider_default_scope_id.result
-  value                      = "default"
-  admin_consent_display_name = "Login to the application"
-  admin_consent_description  = "Login to the application"
-}
-
-resource "azuread_application_api_access" "api_access" {
-  application_id = azuread_application_registration.identity_provider.id
-  api_client_id  = azuread_application_registration.identity_provider.client_id
-
-  scope_ids = [azuread_application_permission_scope.identity_provider_default_scope.scope_id]
+resource "azuread_service_principal" "token_agent_service_principal" {
+  client_id = azuread_application.token_agent.client_id
 }
 
 resource "azuread_application_password" "password" {
-  application_id = azuread_application_registration.identity_provider.id
+  application_id = azuread_application.token_agent.id
+}
+
+resource "azuread_app_role_assignment" "main_user_app_role_assignment" {
+  app_role_id         = random_uuid.admin_role_id.result
+  principal_object_id = data.azurerm_client_config.current.object_id
+  resource_object_id  = azuread_service_principal.token_agent_service_principal.object_id
 }

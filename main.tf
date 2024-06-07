@@ -67,6 +67,12 @@ module "setup_ingress_controller" {
   letsencrypt_email         = data.azurerm_key_vault_secret.letsencrypt_email.value
 }
 
+resource "azurerm_key_vault_secret" "traefik_dashboard_access_scope_id" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "traefik-dashboard-access-scope"
+  value        = module.setup_ingress_controller.dashboard_access_scope
+}
+
 module "create_demo_app_namespace" {
   depends_on = [module.setup_cluster]
 
@@ -85,30 +91,6 @@ module "setup_identity_provider" {
   source                    = "./modules/setup_identity_provider"
   azure_resource_group_name = local.azure_resource_group_name
   azure_location            = local.azure_location
-}
-
-resource "azurerm_key_vault_secret" "identity_provider_client_id" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "identity-provider-client-id"
-  value        = module.setup_identity_provider.client_id
-}
-
-resource "azurerm_key_vault_secret" "identity_provider_client_secret" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "identity-provider-client-secret"
-  value        = module.setup_identity_provider.client_secret
-}
-
-resource "azurerm_key_vault_secret" "identity_provider_client_scope" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "identity-provider-client-scope"
-  value        = module.setup_identity_provider.client_scope
-}
-
-resource "azurerm_key_vault_secret" "identity_provider_issuer" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "identity-provider-issuer"
-  value        = module.setup_identity_provider.issuer
 }
 
 resource "azurerm_key_vault_secret" "test_user_email" {
