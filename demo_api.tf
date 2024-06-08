@@ -26,8 +26,6 @@ resource "azuread_application" "demo_api" {
   }
 
   api {
-    requested_access_token_version = 2
-
     oauth2_permission_scope {
       admin_consent_description  = "Demo API read access"
       admin_consent_display_name = "Demo API read access"
@@ -52,39 +50,3 @@ resource "azuread_application_identifier_uri" "app_uri" {
 resource "azuread_service_principal" "demo_api_service_principal" {
   client_id = azuread_application.demo_api.client_id
 }
-
-output "demo_api" {
-  value = {
-    id        = azuread_application.demo_api.id
-    object_id = azuread_service_principal.demo_api_service_principal.object_id
-  }
-}
-
-output "demo_api_reader_role" {
-  value = {
-    id   = random_uuid.demo_api_reader_role_id.result
-    name = "Reader"
-  }
-}
-
-output "demo_api_writer_role" {
-  value = {
-    id   = random_uuid.demo_api_writer_role_id.result
-    name = "Writer"
-  }
-}
-
-output "demo_api_read_scope" {
-  value = {
-    id   = random_uuid.demo_api_read_scope_id.result
-    name = "${azuread_application_identifier_uri.app_uri.identifier_uri}/read"
-  }
-}
-
-output "demo_api_write_scope" {
-  value = {
-    id   = random_uuid.demo_api_write_scope_id.result
-    name = "${azuread_application_identifier_uri.app_uri.identifier_uri}/write"
-  }
-}
-

@@ -17,8 +17,6 @@ resource "azuread_application" "traefik" {
   }
 
   api {
-    requested_access_token_version = 2
-
     oauth2_permission_scope {
       admin_consent_description  = "Access the Traefik Dashboard"
       admin_consent_display_name = "Access the Traefik Dashboard"
@@ -37,15 +35,10 @@ resource "azuread_service_principal" "token_agent_service_principal" {
   client_id = azuread_application.traefik.client_id
 }
 
-resource "azuread_app_role_assignment" "main_user_app_role_assignment" {
-  app_role_id         = random_uuid.traefik_dashboard_access_role_id.result
-  principal_object_id = data.azurerm_client_config.current.object_id
-  resource_object_id  = azuread_service_principal.token_agent_service_principal.object_id
-}
-
 output "app" {
   value = {
     id        = azuread_application.traefik.id
+    client_id = azuread_application.traefik.client_id
     object_id = azuread_service_principal.token_agent_service_principal.object_id
   }
 }

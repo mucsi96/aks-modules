@@ -18,7 +18,8 @@ resource "azuread_user" "test_user" {
 
 output "test_user" {
   value = {
-    name     = azuread_user.test_user.user_principal_name
+    object_id = azuread_user.test_user.object_id
+    email     = azuread_user.test_user.user_principal_name
     password = random_password.test_user_password.result
   }
   sensitive = true
