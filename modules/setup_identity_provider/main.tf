@@ -28,7 +28,7 @@ output "app" {
     client_id = azuread_application.token_agent.client_id
     object_id = azuread_service_principal.token_agent_service_principal.object_id
     secret    = azuread_application_password.password.value
-    issuer    = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
+    tenant_id = data.azurerm_client_config.current.tenant_id
   }
   sensitive = true
 }

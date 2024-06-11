@@ -52,8 +52,8 @@ resource "azurerm_key_vault_secret" "token_agent_client_secret" {
   value        = module.setup_identity_provider.app.secret
 }
 
-resource "azurerm_key_vault_secret" "token_agent_issuer" {
+resource "azurerm_key_vault_secret" "tenant_id" {
   key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "token-agent-issuer"
-  value        = module.setup_identity_provider.app.issuer
+  name         = "tenant-id"
+  value        = module.setup_identity_provider.app.tenant_id
 }
