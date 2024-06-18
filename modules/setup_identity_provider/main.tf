@@ -12,6 +12,10 @@ resource "azuread_application" "token_agent" {
   web {
     redirect_uris = ["http://localhost:8080/callback", "https://auth.auth-tools.home/callback"]
   }
+
+  api {
+    requested_access_token_version = 2
+  }
 }
 
 resource "azuread_service_principal" "token_agent_service_principal" {

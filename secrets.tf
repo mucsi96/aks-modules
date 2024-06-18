@@ -28,6 +28,11 @@ resource "azurerm_key_vault_secret" "test_user_password" {
   value        = module.setup_identity_provider.test_user.password
 }
 
+resource "azurerm_key_vault_secret" "issuer" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "issuer"
+  value        = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0/"
+}
 resource "azurerm_key_vault_secret" "traefik_client_id" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "traefik-client-id"

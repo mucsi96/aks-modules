@@ -26,6 +26,8 @@ resource "azuread_application" "demo_api" {
   }
 
   api {
+    requested_access_token_version = 2
+
     oauth2_permission_scope {
       admin_consent_description  = "Demo API read access"
       admin_consent_display_name = "Demo API read access"
