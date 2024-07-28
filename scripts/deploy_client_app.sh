@@ -10,9 +10,9 @@ helm upgrade \
     --force \
     --kubeconfig .kube/admin-config \
     --namespace demo \
-    --set image=mucsi96/demo-client:5 \
+    --set image=mucsi96/demo-client \
     --set host=demo.$host \
-    --set basePath=/ \
+    --set basePath="" \
     --set env.AUTH_TOKEN_AGENT=https://auth.$host \
     --set env.API_CLIENT_ID=$apiClientId \
     --wait \

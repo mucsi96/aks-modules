@@ -127,8 +127,8 @@ resource "helm_release" "traefik" {
           name = "traefik-dashboard-auth"
         }
         spec = {
-          forwardauth = {
-            address = "http://agent:8080/authorize?namespace=traefik&scopes=${azuread_application.traefik.client_id}/dashboard-access&requiredRoles=Dashboard.Viewer"
+          forwardAuth = {
+            address = "http://token-agent.identity-provider.svc:8080/authorize?namespace=traefik&scopes=${azuread_application.traefik.client_id}/dashboard-access&requiredRoles=Dashboard.Viewer"
             addAuthCookiesToResponse = [
               "accessToken",
               "refreshToken",

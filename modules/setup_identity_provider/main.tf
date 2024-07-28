@@ -6,11 +6,14 @@ data "azurerm_kubernetes_cluster" "kubernetes_cluster" {
 }
 
 resource "azuread_application" "token_agent" {
-  display_name            = "Token Agent"
-  owners                  = [data.azurerm_client_config.current.object_id]
+  display_name = "Token Agent"
+  owners       = [data.azurerm_client_config.current.object_id]
 
   web {
-    redirect_uris = ["http://localhost:8080/callback", "https://auth.${var.hostname}/callback"]
+    redirect_uris = [
+      "http://localhost:8080/callback",
+      "https://auth.${var.hostname}/callback"
+    ]
   }
 
   api {
