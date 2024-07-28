@@ -61,16 +61,20 @@ module "setup_ingress_controller" {
   letsencrypt_email         = data.azurerm_key_vault_secret.letsencrypt_email.value
 }
 
+module "setup_identity_provider" {
+  depends_on = [module.setup_ingress_controller]
+
+  source                    = "./modules/setup_identity_provider"
+  azure_resource_group_name = local.azure_resource_group_name
+  azure_location            = local.azure_location
+  hostname                  = "${local.azure_resource_group_name}.${data.azurerm_key_vault_secret.dns_zone.value}"
+  token_agent_version       = local.token_agent_version
+}
+
 module "create_demo_app_namespace" {
-  depends_on = [module.setup_cluster]
+  depends_on = [module.setup_identity_provider]
 
   source                    = "./modules/create_app_namespace"
   azure_resource_group_name = local.azure_resource_group_name
   k8s_namespace             = "demo"
-}
-
-module "setup_identity_provider" {
-  source                    = "./modules/setup_identity_provider"
-  azure_resource_group_name = local.azure_resource_group_name
-  azure_location            = local.azure_location
 }

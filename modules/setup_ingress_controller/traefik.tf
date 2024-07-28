@@ -22,6 +22,7 @@ resource "helm_release" "traefik" {
   version    = var.traefik_chart_version
   namespace  = kubernetes_namespace.k8s_namespace.metadata[0].name
   wait       = true
+  #https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
   values = [yamlencode({
     podSecurityContext = {
       fsGroup = 65532
@@ -103,5 +104,39 @@ resource "helm_release" "traefik" {
         "service.beta.kubernetes.io/azure-allowed-ip-ranges"            = var.ip_range
       }
     }
+    ingressRoute = {
+      dashboard = {
+        enabled     = true
+        matchRule   = "Host(`traefik.${var.azure_resource_group_name}.${var.dns_zone}`)"
+        entryPoints = ["websecure"]
+        tls = {
+          enabled = true
+        }
+        middlewares = [
+          {
+            name = "traefik-dashboard-auth"
+          }
+        ]
+      }
+    }
+    extraObjects = [
+      {
+        apiVersion = "traefik.io/v1alpha1"
+        kind       = "Middleware"
+        metadata = {
+          name = "traefik-dashboard-auth"
+        }
+        spec = {
+          forwardauth = {
+            address = "http://agent:8080/authorize?namespace=traefik&scopes=${azuread_application.traefik.client_id}/dashboard-access&requiredRoles=Dashboard.Viewer"
+            addAuthCookiesToResponse = [
+              "accessToken",
+              "refreshToken",
+              "idToken"
+            ]
+          }
+        }
+      }
+    ]
   })]
 }

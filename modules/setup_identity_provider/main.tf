@@ -10,7 +10,7 @@ resource "azuread_application" "token_agent" {
   owners                  = [data.azurerm_client_config.current.object_id]
 
   web {
-    redirect_uris = ["http://localhost:8080/callback", "https://auth.auth-tools.home/callback"]
+    redirect_uris = ["http://localhost:8080/callback", "https://auth.${var.hostname}/callback"]
   }
 
   api {

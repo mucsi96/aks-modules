@@ -8,3 +8,13 @@ variable "azure_location" {
   type        = string
 }
 
+variable "hostname" {
+  description = "Token agent public hostname"
+  type        = string
+}
+
+variable "token_agent_version" {
+  description = "The version of the Token Agent to deploy"
+  type        = number
+}
+
