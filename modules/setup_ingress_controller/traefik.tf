@@ -110,7 +110,7 @@ resource "helm_release" "traefik" {
         matchRule   = "Host(`traefik.${var.azure_resource_group_name}.${var.dns_zone}`)"
         entryPoints = ["websecure"]
         tls = {
-          enabled = true
+          certResolver = "letsencrypt"
         }
         middlewares = [
           {
