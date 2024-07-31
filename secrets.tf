@@ -42,7 +42,7 @@ resource "azurerm_key_vault_secret" "traefik_client_id" {
 resource "azurerm_key_vault_secret" "demo_api_client_id" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "demo-api-client-id"
-  value        = azuread_application.demo_api.client_id
+  value        = module.register_demo_api.client_id
 }
 
 resource "azurerm_key_vault_secret" "token_agent_client_id" {

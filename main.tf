@@ -71,6 +71,15 @@ module "setup_identity_provider" {
   token_agent_version       = local.token_agent_version
 }
 
+module "register_demo_api" {
+  depends_on = [module.setup_identity_provider]
+
+  source       = "./modules/register_api"
+  display_name = "Demo API"
+  roles        = ["Reader", "Writer"]
+  scopes       = ["read", "write"]
+}
+
 module "create_demo_app_namespace" {
   depends_on = [module.setup_identity_provider]
 
