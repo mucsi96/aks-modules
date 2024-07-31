@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 resource "azuread_application_pre_authorized" "traefik_dashboard_access" {
   application_id       = module.setup_ingress_controller.app.id
   authorized_client_id = module.setup_identity_provider.app.client_id
