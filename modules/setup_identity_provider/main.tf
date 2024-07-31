@@ -1,13 +1,6 @@
-data "azurerm_client_config" "current" {}
-
-data "azurerm_kubernetes_cluster" "kubernetes_cluster" {
-  name                = var.azure_resource_group_name
-  resource_group_name = var.azure_resource_group_name
-}
-
 resource "azuread_application" "token_agent" {
   display_name = "Token Agent"
-  owners       = [data.azurerm_client_config.current.object_id]
+  owners       = [var.owner]
 
   web {
     redirect_uris = [
@@ -35,7 +28,6 @@ output "app" {
     client_id = azuread_application.token_agent.client_id
     object_id = azuread_service_principal.token_agent_service_principal.object_id
     secret    = azuread_application_password.password.value
-    tenant_id = data.azurerm_client_config.current.tenant_id
   }
   sensitive = true
 }

@@ -1,5 +1,3 @@
-data "azurerm_client_config" "current" {}
-
 resource "random_uuid" "role_id" {
   for_each = toset(var.roles)
 }
@@ -10,7 +8,7 @@ resource "random_uuid" "scope_id" {
 
 resource "azuread_application" "api" {
   display_name = var.display_name
-  owners       = [data.azurerm_client_config.current.object_id]
+  owners       = [var.owner]
 
   dynamic "app_role" {
     for_each = toset(var.roles)

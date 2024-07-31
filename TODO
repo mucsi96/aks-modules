@@ -1,0 +1,1 @@
+create only 1 wildcard certificate using cert manager or terraform instead of 1 for each route with traeffik

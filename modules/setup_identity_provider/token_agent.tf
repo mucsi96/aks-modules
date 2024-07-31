@@ -17,7 +17,7 @@ resource "helm_release" "token_agent" {
     host = "auth.${var.hostname}"
     basePath = ""
     env = {
-      ISSUER        = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
+      ISSUER        = var.issuer
       PUBLIC_URL    = "https://auth.${var.hostname}"
       COOKIE_DOMAIN = var.hostname
       CLIENT_ID     = azuread_application.token_agent.client_id

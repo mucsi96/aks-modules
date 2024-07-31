@@ -1,3 +1,27 @@
+output "resource_group_name" {
+  value = var.azure_resource_group_name
+}
+
+output "location" {
+  value = var.azure_location
+}
+
+output "owner" {
+  value = data.azurerm_client_config.current.object_id
+}
+
+output "tenant_id" {
+  value = data.azurerm_client_config.current.tenant_id
+}
+
+output "subscription_id" {
+  value = data.azurerm_client_config.current.subscription_id
+}
+
+output "issuer" {
+  value = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
+}
+
 output "k8s_admin_config" {
   value     = azurerm_kubernetes_cluster.kubernetes_cluster.kube_config_raw
   sensitive = true

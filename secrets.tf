@@ -4,6 +4,18 @@ resource "azurerm_key_vault_secret" "remote_backend_config" {
   value        = module.setup_cluster.k8s_admin_config
 }
 
+resource "azurerm_key_vault_secret" "issuer" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "issuer"
+  value        = module.setup_cluster.issuer
+}
+
+resource "azurerm_key_vault_secret" "tenant_id" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "tenant-id"
+  value        = module.setup_cluster.tenant_id
+}
+
 resource "azurerm_key_vault_secret" "k8s_admin_config" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "k8s-admin-config"
@@ -28,21 +40,10 @@ resource "azurerm_key_vault_secret" "test_user_password" {
   value        = module.setup_identity_provider.test_user.password
 }
 
-resource "azurerm_key_vault_secret" "issuer" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "issuer"
-  value        = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
-}
 resource "azurerm_key_vault_secret" "traefik_client_id" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "traefik-client-id"
   value        = module.setup_ingress_controller.app.client_id
-}
-
-resource "azurerm_key_vault_secret" "demo_api_client_id" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "demo-api-client-id"
-  value        = module.register_demo_api.client_id
 }
 
 resource "azurerm_key_vault_secret" "token_agent_client_id" {
@@ -57,8 +58,8 @@ resource "azurerm_key_vault_secret" "token_agent_client_secret" {
   value        = module.setup_identity_provider.app.secret
 }
 
-resource "azurerm_key_vault_secret" "tenant_id" {
+resource "azurerm_key_vault_secret" "demo_api_client_id" {
   key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "tenant-id"
-  value        = module.setup_identity_provider.app.tenant_id
+  name         = "demo-api-client-id"
+  value        = module.register_demo_api.client_id
 }

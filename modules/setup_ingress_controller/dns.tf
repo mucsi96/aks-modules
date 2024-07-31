@@ -1,33 +1,33 @@
 resource "azurerm_dns_zone" "dns_zone" {
-  resource_group_name = var.azure_resource_group_name
+  resource_group_name = var.resource_group_name
   name                = var.dns_zone
 }
 
 resource "azurerm_dns_a_record" "dns_a_record" {
-  resource_group_name = var.azure_resource_group_name
+  resource_group_name = var.resource_group_name
   zone_name           = azurerm_dns_zone.dns_zone.name
-  name                = var.azure_resource_group_name
+  name                = var.resource_group_name
   ttl                 = 3600
   records             = [data.azurerm_public_ip.public_ip.ip_address]
 }
 
 resource "azurerm_dns_cname_record" "name" {
-  resource_group_name = var.azure_resource_group_name
+  resource_group_name = var.resource_group_name
   zone_name           = azurerm_dns_zone.dns_zone.name
-  name                = "*.${var.azure_resource_group_name}"
+  name                = "*.${var.resource_group_name}"
   ttl                 = 3600
-  record              = "${var.azure_resource_group_name}.${var.dns_zone}"
+  record              = "${var.resource_group_name}.${var.dns_zone}"
 }
 
 resource "azurerm_user_assigned_identity" "dns_challenge_identity" {
-  resource_group_name = var.azure_resource_group_name
-  location            = var.azure_location
+  resource_group_name = var.resource_group_name
+  location            = var.location
   name                = "dns_challenge_identity"
 }
 
 # https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster#create-the-federated-identity-credential
 resource "azurerm_federated_identity_credential" "dns_challenge_identity_credential" {
-  resource_group_name = var.azure_resource_group_name
+  resource_group_name = var.resource_group_name
   name                = "dns_challenge_identity_credential"
   parent_id           = azurerm_user_assigned_identity.dns_challenge_identity.id
   issuer              = data.azurerm_kubernetes_cluster.kubernetes_cluster.oidc_issuer_url

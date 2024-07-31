@@ -7,6 +7,8 @@ terraform {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_virtual_network" "virtual_network" {
   name                = var.azure_resource_group_name
   resource_group_name = var.azure_resource_group_name

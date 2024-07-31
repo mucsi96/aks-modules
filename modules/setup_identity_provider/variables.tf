@@ -1,3 +1,13 @@
+variable "owner" {
+  description = "The owner of the resources"
+  type        = string
+}
+
+variable "issuer" {
+  description = "The issuer of OIDC tokens"
+  type        = string
+}
+
 variable "azure_resource_group_name" {
   description = "The name of the Azure Resource Group"
   type        = string

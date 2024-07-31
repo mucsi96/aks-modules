@@ -1,12 +1,10 @@
-data "azurerm_client_config" "current" {}
-
 resource "random_uuid" "traefik_dashboard_access_role_id" {}
 
 resource "random_uuid" "traefik_dashboard_access_scope_id" {}
 
 resource "azuread_application" "traefik" {
   display_name = "Traefik"
-  owners       = [data.azurerm_client_config.current.object_id]
+  owners       = [var.owner]
 
   app_role {
     id                   = random_uuid.traefik_dashboard_access_role_id.result

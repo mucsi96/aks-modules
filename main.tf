@@ -24,14 +24,14 @@ provider "helm" {
 
 module "setup_cluster" {
   source                    = "./modules/setup_cluster"
-  azure_resource_group_name = local.azure_resource_group_name
-  azure_location            = local.azure_location
-  azure_k8s_version         = local.azure_k8s_version
+  azure_resource_group_name = "p02"
+  azure_location            = "centralindia"
+  azure_k8s_version         = "1.29.4"
 }
 
 data "azurerm_key_vault" "kv" {
-  resource_group_name = local.azure_resource_group_name
-  name                = local.azure_resource_group_name
+  resource_group_name = module.setup_cluster.resource_group_name
+  name                = module.setup_cluster.resource_group_name
 }
 
 data "azurerm_key_vault_secret" "dns_zone" {
@@ -50,40 +50,47 @@ data "azurerm_key_vault_secret" "letsencrypt_email" {
 }
 
 module "setup_ingress_controller" {
-  depends_on = [module.setup_cluster]
-
-  source                    = "./modules/setup_ingress_controller"
-  azure_resource_group_name = local.azure_resource_group_name
-  azure_location            = local.azure_location
-  dns_zone                  = data.azurerm_key_vault_secret.dns_zone.value
-  traefik_chart_version     = local.traefik_chart_version
-  ip_range                  = data.azurerm_key_vault_secret.ip_range.value
-  letsencrypt_email         = data.azurerm_key_vault_secret.letsencrypt_email.value
+  source                = "./modules/setup_ingress_controller"
+  resource_group_name   = module.setup_cluster.resource_group_name
+  location              = module.setup_cluster.location
+  owner                 = module.setup_cluster.owner
+  tenant_id             = module.setup_cluster.tenant_id
+  subscription_id       = module.setup_cluster.subscription_id
+  dns_zone              = data.azurerm_key_vault_secret.dns_zone.value
+  traefik_chart_version = "30.0.0" #https://github.com/traefik/traefik-helm-chart/releases
+  ip_range              = data.azurerm_key_vault_secret.ip_range.value
+  letsencrypt_email     = data.azurerm_key_vault_secret.letsencrypt_email.value
 }
 
 module "setup_identity_provider" {
   depends_on = [module.setup_ingress_controller]
 
+  owner                     = module.setup_cluster.owner
+  issuer                    = module.setup_cluster.issuer
   source                    = "./modules/setup_identity_provider"
-  azure_resource_group_name = local.azure_resource_group_name
-  azure_location            = local.azure_location
-  hostname                  = "${local.azure_resource_group_name}.${data.azurerm_key_vault_secret.dns_zone.value}"
-  token_agent_version       = local.token_agent_version
+  azure_resource_group_name = module.setup_cluster.resource_group_name
+  azure_location            = module.setup_cluster.location
+  hostname                  = "${module.setup_cluster.resource_group_name}.${data.azurerm_key_vault_secret.dns_zone.value}"
+  token_agent_version       = 1
 }
 
 module "register_demo_api" {
-  depends_on = [module.setup_identity_provider]
-
   source       = "./modules/register_api"
+  owner        = module.setup_cluster.owner
   display_name = "Demo API"
   roles        = ["Reader", "Writer"]
   scopes       = ["read", "write"]
 }
 
 module "create_demo_app_namespace" {
-  depends_on = [module.setup_identity_provider]
-
   source                    = "./modules/create_app_namespace"
-  azure_resource_group_name = local.azure_resource_group_name
+  azure_resource_group_name = module.setup_cluster.resource_group_name
   k8s_namespace             = "demo"
+}
+
+module "create_demo_database" {
+  source        = "./modules/create_postgres_database"
+  k8s_name      = "demo-db"
+  k8s_namespace = module.create_demo_app_namespace.k8s_namespace
+  db_name       = "demo"
 }

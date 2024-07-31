@@ -10,7 +10,7 @@ resource "kubernetes_service_account" "service_account" {
     namespace = kubernetes_namespace.k8s_namespace.metadata[0].name
     annotations = {
       "azure.workload.identity/client-id" = azurerm_user_assigned_identity.dns_challenge_identity.client_id
-      "azure.workload.identity/tenant-id" = data.azurerm_client_config.current.tenant_id
+      "azure.workload.identity/tenant-id" = var.tenant_id
     }
   }
 }
@@ -46,11 +46,11 @@ resource "helm_release" "traefik" {
     env = [
       {
         name  = "AZURE_SUBSCRIPTION_ID"
-        value = data.azurerm_client_config.current.subscription_id
+        value = var.subscription_id
       },
       {
         name  = "AZURE_RESOURCE_GROUP"
-        value = var.azure_resource_group_name
+        value = var.resource_group_name
       },
       {
         name  = "AZURE_AUTH_METHOD"
@@ -100,14 +100,14 @@ resource "helm_release" "traefik" {
       }
       annotations = {
         "service.beta.kubernetes.io/azure-load-balancer-resource-group" = data.azurerm_kubernetes_cluster.kubernetes_cluster.node_resource_group
-        "service.beta.kubernetes.io/azure-pip-name"                     = var.azure_resource_group_name
+        "service.beta.kubernetes.io/azure-pip-name"                     = var.resource_group_name
         "service.beta.kubernetes.io/azure-allowed-ip-ranges"            = var.ip_range
       }
     }
     ingressRoute = {
       dashboard = {
         enabled     = true
-        matchRule   = "Host(`traefik.${var.azure_resource_group_name}.${var.dns_zone}`)"
+        matchRule   = "Host(`traefik.${var.resource_group_name}.${var.dns_zone}`)"
         entryPoints = ["websecure"]
         tls = {
           certResolver = "letsencrypt"

@@ -1,10 +1,25 @@
-variable "azure_resource_group_name" {
+variable "resource_group_name" {
   description = "The name of the Azure Resource Group"
   type        = string
 }
 
-variable "azure_location" {
+variable "location" {
   description = "The Azure location to deploy resources"
+  type        = string
+}
+
+variable "owner" {
+  description = "The owner of the resources"
+  type        = string
+}
+
+variable "tenant_id" {
+  description = "The tenant ID of the Azure AD"
+  type        = string
+}
+
+variable "subscription_id" {
+  description = "The subscription ID of the Azure AD"
   type        = string
 }
 

@@ -1,3 +1,8 @@
+variable "owner" {
+  description = "The owner of the resources"
+  type        = string
+}
+
 variable "display_name" {
   description = "The display name of the API"
   type        = string
