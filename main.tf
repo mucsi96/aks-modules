@@ -63,14 +63,12 @@ module "setup_ingress_controller" {
 }
 
 module "setup_identity_provider" {
-  depends_on = [module.setup_ingress_controller]
-
   owner                     = module.setup_cluster.owner
   issuer                    = module.setup_cluster.issuer
   source                    = "./modules/setup_identity_provider"
   azure_resource_group_name = module.setup_cluster.resource_group_name
   azure_location            = module.setup_cluster.location
-  hostname                  = "${module.setup_cluster.resource_group_name}.${data.azurerm_key_vault_secret.dns_zone.value}"
+  hostname                  = module.setup_ingress_controller.hostname
   token_agent_version       = 1
 }
 

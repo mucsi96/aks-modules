@@ -22,6 +22,12 @@ resource "azurerm_key_vault_secret" "k8s_admin_config" {
   value        = module.setup_cluster.k8s_admin_config
 }
 
+resource "azurerm_key_vault_secret" "hostname" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "hostname"
+  value        = module.setup_ingress_controller.hostname
+}
+
 resource "azurerm_key_vault_secret" "demo_namespace_k8s_user_config" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "demo-namespace-k8s-user-config"
