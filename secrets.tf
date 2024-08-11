@@ -69,3 +69,15 @@ resource "azurerm_key_vault_secret" "demo_api_client_id" {
   name         = "demo-api-client-id"
   value        = module.register_demo_api.client_id
 }
+
+resource "azurerm_key_vault_secret" "demo_db_username" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "demo-db-username"
+  value        = module.create_demo_database.username
+}
+
+resource "azurerm_key_vault_secret" "demo_db_password" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "demo-db-password"
+  value        = module.create_demo_database.password
+}
