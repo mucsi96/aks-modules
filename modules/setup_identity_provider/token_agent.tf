@@ -8,7 +8,7 @@ resource "helm_release" "token_agent" {
   name       = "token-agent"
   repository = "https://mucsi96.github.io/k8s-helm-charts"
   chart      = "node-app"
-  version    = "8.0.0"
+  version    = "10.0.0"
   namespace  = kubernetes_namespace.k8s_namespace.metadata[0].name
   wait       = true
   #https://github.com/mucsi96/k8s-helm-charts/tree/main/charts/node_app
