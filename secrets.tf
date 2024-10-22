@@ -1,9 +1,3 @@
-resource "azurerm_key_vault_secret" "remote_backend_config" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "remote-backend-config"
-  value        = module.setup_cluster.k8s_admin_config
-}
-
 resource "azurerm_key_vault_secret" "issuer" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "issuer"
