@@ -16,9 +16,9 @@
       "type": "shell",
       "command": "bash",
       "label": "Init",
-      "args": ["init.sh"],
+      "args": ["scripts/init.sh"],
       "options": {
-        "cwd": "${workspaceFolder}/init"
+        "cwd": "${workspaceFolder}"
       },
       "problemMatcher": []
     },
