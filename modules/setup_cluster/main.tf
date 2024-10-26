@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">=3.105.0"
+      version = ">=4.6.0"
     }
   }
 }
@@ -37,8 +37,8 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   # see https://azure.github.io/azure-workload-identity/docs/
   workload_identity_enabled = true
   kubernetes_version        = var.azure_k8s_version
-  node_os_channel_upgrade   = "NodeImage"
-  automatic_channel_upgrade = "node-image"
+  node_os_upgrade_channel   = "NodeImage"
+  automatic_upgrade_channel = "node-image"
 
   identity {
     type = "SystemAssigned"

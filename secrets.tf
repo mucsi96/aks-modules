@@ -75,3 +75,15 @@ resource "azurerm_key_vault_secret" "demo_db_password" {
   name         = "demo-db-password"
   value        = module.create_demo_database.password
 }
+
+resource "azurerm_key_vault_secret" "ai_endpoint" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "ai-endpoint"
+  value        = module.setup_ai.endpoint
+}
+
+resource "azurerm_key_vault_secret" "ai_access_key" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "ai-access-key"
+  value        = module.setup_ai.access_key
+}

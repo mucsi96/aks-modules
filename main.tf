@@ -2,27 +2,27 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">=3.105.0"
+      version = ">=4.6.0"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">=2.30.0"
+      version = ">=2.33.0"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = ">=2.13.2"
+      version = ">=2.16.1"
     }
 
     tls = {
-      source = "hashicorp/tls"
-      version = ">=4.0.5"
+      source  = "hashicorp/tls"
+      version = ">=4.0.6"
     }
 
     acme = {
-      source = "vancluever/acme"
-      version = ">=2.25.0"
+      source  = "vancluever/acme"
+      version = ">=2.26.0"
     }
   }
 }
@@ -31,6 +31,7 @@ provider "random" {}
 
 provider "azurerm" {
   features {}
+  subscription_id = var.azure_subscription_id
 }
 
 provider "azuread" {}
@@ -104,6 +105,12 @@ module "setup_identity_provider" {
   azure_location            = module.setup_cluster.location
   hostname                  = module.setup_ingress_controller.hostname
   token_agent_version       = 1
+}
+
+module "setup_ai" {
+  source              = "./modules/setup_ai"
+  resource_group_name = module.setup_cluster.resource_group_name
+  location            = "eastus"
 }
 
 module "register_demo_api" {
