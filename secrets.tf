@@ -87,3 +87,9 @@ resource "azurerm_key_vault_secret" "ai_access_key" {
   name         = "ai-access-key"
   value        = module.setup_ai.access_key
 }
+
+resource "azurerm_key_vault_secret" "ai_api_version" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "ai-api-version"
+  value        = module.setup_ai.api_version
+}
