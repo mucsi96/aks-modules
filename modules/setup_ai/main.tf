@@ -1,5 +1,5 @@
 resource "azurerm_ai_services" "ai_services" {
-  name                         = "ai-account-3"
+  name                         = var.resource_group_name
   location                     = var.location
   resource_group_name          = var.resource_group_name
   sku_name                     = "S0"
@@ -8,7 +8,7 @@ resource "azurerm_ai_services" "ai_services" {
 }
 
 resource "azurerm_cognitive_deployment" "openai_deployment" {
-  name                 = "${var.resource_group_name}-deployment"
+  name                 = var.resource_group_name
   cognitive_account_id = azurerm_ai_services.ai_services.id
 
   model {
