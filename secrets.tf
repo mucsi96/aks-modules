@@ -82,14 +82,14 @@ resource "azurerm_key_vault_secret" "ai_endpoint" {
   value        = module.setup_ai.endpoint
 }
 
-resource "azurerm_key_vault_secret" "ai_access_key" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "ai-access-key"
-  value        = module.setup_ai.access_key
-}
-
 resource "azurerm_key_vault_secret" "ai_api_version" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "ai-api-version"
   value        = module.setup_ai.api_version
+}
+
+resource "azurerm_key_vault_secret" "ai_deployment" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "ai-deployment"
+  value        = module.setup_ai.deployment
 }
