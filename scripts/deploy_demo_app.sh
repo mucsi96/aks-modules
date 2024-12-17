@@ -1,10 +1,10 @@
 #!/bin/bash
 
-host=$(az keyvault secret show --vault-name p02 --name hostname --query value --output tsv)
-apiClientId=$(az keyvault secret show --vault-name p02 --name demo-api-client-id --query value -o tsv)
-issuer=$(az keyvault secret show --vault-name p02 --name issuer --query value -o tsv)
-dbUsername=$(az keyvault secret show --vault-name p02 --name demo-db-username --query value -o tsv)
-dbPassword=$(az keyvault secret show --vault-name p02 --name demo-db-password --query value -o tsv)
+host=$(az keyvault secret show --vault-name p05 --name hostname --query value --output tsv)
+apiClientId=$(az keyvault secret show --vault-name p05 --name demo-api-client-id --query value -o tsv)
+issuer=$(az keyvault secret show --vault-name p05 --name issuer --query value -o tsv)
+dbUsername=$(az keyvault secret show --vault-name p05 --name demo-db-username --query value -o tsv)
+dbPassword=$(az keyvault secret show --vault-name p05 --name demo-db-password --query value -o tsv)
 
 helm repo update
 

@@ -2,12 +2,12 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">=4.6.0"
+      version = ">=4.14.0"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">=2.33.0"
+      version = ">=2.35.0"
     }
 
     helm = {
@@ -22,7 +22,7 @@ terraform {
 
     acme = {
       source  = "vancluever/acme"
-      version = ">=2.26.0"
+      version = ">=2.28.2"
     }
   }
 }
@@ -59,9 +59,9 @@ provider "acme" {
 
 module "setup_cluster" {
   source                    = "./modules/setup_cluster"
-  azure_resource_group_name = "p02"
+  azure_resource_group_name = "p05"
   azure_location            = "centralindia"
-  azure_k8s_version         = "1.29.4"
+  azure_k8s_version         = "1.31"
 }
 
 data "azurerm_key_vault" "kv" {
@@ -95,6 +95,8 @@ module "setup_ingress_controller" {
   traefik_chart_version = "30.0.0" #https://github.com/traefik/traefik-helm-chart/releases
   ip_range              = data.azurerm_key_vault_secret.ip_range.value
   letsencrypt_email     = data.azurerm_key_vault_secret.letsencrypt_email.value
+
+  depends_on = [module.setup_cluster]
 }
 
 module "setup_identity_provider" {
@@ -105,12 +107,8 @@ module "setup_identity_provider" {
   azure_location            = module.setup_cluster.location
   hostname                  = module.setup_ingress_controller.hostname
   token_agent_version       = 1
-}
 
-module "setup_ai" {
-  source              = "./modules/setup_ai"
-  resource_group_name = module.setup_cluster.resource_group_name
-  location            = "eastus"
+  depends_on = [module.setup_cluster]
 }
 
 module "register_demo_api" {
@@ -119,12 +117,16 @@ module "register_demo_api" {
   display_name = "Demo API"
   roles        = ["Reader", "Writer"]
   scopes       = ["read", "write"]
+
+  depends_on = [module.setup_cluster]
 }
 
 module "create_demo_app_namespace" {
   source                    = "./modules/create_app_namespace"
   azure_resource_group_name = module.setup_cluster.resource_group_name
   k8s_namespace             = "demo"
+
+  depends_on = [module.setup_cluster]
 }
 
 module "create_demo_database" {
@@ -132,4 +134,6 @@ module "create_demo_database" {
   k8s_name      = "demo-db"
   k8s_namespace = module.create_demo_app_namespace.k8s_namespace
   db_name       = "demo"
+
+  depends_on = [module.setup_cluster]
 }

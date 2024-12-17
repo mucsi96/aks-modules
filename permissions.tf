@@ -36,9 +36,3 @@ resource "azuread_app_role_assignment" "allow_test_user_read_demo_api" {
   principal_object_id = module.setup_identity_provider.test_user.object_id
   resource_object_id  = module.register_demo_api.resource_object_id
 }
-
-resource "azurerm_role_assignment" "allow_admin_user_to_use_cognitive_services" {
-  scope                = module.setup_ai.id
-  role_definition_name = "Cognitive Services OpenAI User"
-  principal_id         = module.setup_cluster.owner
-}

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">=4.6.0"
+      version = ">=4.14.0"
     }
   }
 }
@@ -58,7 +58,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
 
   network_profile {
     network_plugin    = "kubenet"
-    load_balancer_sku = "basic"
+    load_balancer_sku = "standard"
   }
 }
 
@@ -73,5 +73,5 @@ resource "azurerm_public_ip" "public_ip" {
   resource_group_name = azurerm_kubernetes_cluster.kubernetes_cluster.node_resource_group
   location            = var.azure_location
   allocation_method   = "Static"
-  sku                 = "Basic"
+  sku                 = "Standard"
 }

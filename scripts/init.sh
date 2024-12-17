@@ -12,32 +12,17 @@ fi
 subscriptionId=$(az account show --query id -o tsv)
 userObjectId=$(az ad signed-in-user show --query id -o tsv)
 location="centralindia"
-storageAccountName="${resourceGroupName}uibariu$(openssl rand -hex 4)"
-containerName="terraformstate"
 
 echo "Creating Azure resources for Terraform backend..."
 
 echo "Creating resource group $resourceGroupName in $location..."
 az group create --name $resourceGroupName --location $location
 
-echo "Creating storage account $storageAccountName..."
-az storage account create \
-  --name $storageAccountName \
-  --resource-group $resourceGroupName \
-  --location $location \
-  --sku Standard_LRS
-
-echo "Creating blob container $containerName..."
-az storage container create \
-  --name $containerName \
-  --account-name $storageAccountName
-
 echo "Generating SAS token for storage account..."
-sasToken=$(az storage account generate-sas \
+sasToken=$(az storage container generate-sas \
   --permissions acdlrw \
-  --account-name $storageAccountName \
-  --services b \
-  --resource-types sco \
+  --account-name ibari \
+  --name terraform-states \
   --expiry $(date -u -d '365 days' +%Y-%m-%dT%H:%MZ) \
   --output tsv)
 
@@ -58,9 +43,9 @@ az keyvault set-policy \
 backendConfig=$(cat <<EOT
 terraform {
     backend "azurerm" {
-        storage_account_name = "$storageAccountName"
-        container_name       = "$containerName"
-        key                  = "terraform.tfstate"
+        storage_account_name = "ibari"
+        container_name       = "terraform-states"
+        key                  = "$resourceGroupName.tfstate"
         sas_token            = "$sasToken"
     }
 }
@@ -82,3 +67,5 @@ echo "Saving backend configuration to backend.tf..."
 az keyvault secret show --vault-name $resourceGroupName --name remote-backend-config --query value --output tsv > backend.tf
 
 echo "Azure resources for Terraform backend are configured."
+
+terraform init
