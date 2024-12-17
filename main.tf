@@ -92,7 +92,7 @@ module "setup_ingress_controller" {
   tenant_id             = module.setup_cluster.tenant_id
   subscription_id       = module.setup_cluster.subscription_id
   dns_zone              = data.azurerm_key_vault_secret.dns_zone.value
-  traefik_chart_version = "30.0.0" #https://github.com/traefik/traefik-helm-chart/releases
+  traefik_chart_version = "33.2.1" #https://github.com/traefik/traefik-helm-chart/releases
   ip_range              = data.azurerm_key_vault_secret.ip_range.value
   letsencrypt_email     = data.azurerm_key_vault_secret.letsencrypt_email.value
 
