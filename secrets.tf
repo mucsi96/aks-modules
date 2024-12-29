@@ -58,20 +58,20 @@ resource "azurerm_key_vault_secret" "token_agent_client_secret" {
   value        = module.setup_identity_provider.app.secret
 }
 
-resource "azurerm_key_vault_secret" "demo_api_client_id" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "demo-api-client-id"
-  value        = module.register_demo_api.client_id
-}
-
 resource "azurerm_key_vault_secret" "demo_db_username" {
   key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "demo-db-username"
-  value        = module.create_demo_database.username
+  name         = "db-username"
+  value        = module.create_database.username
 }
 
 resource "azurerm_key_vault_secret" "demo_db_password" {
   key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "demo-db-password"
-  value        = module.create_demo_database.password
+  name         = "db-password"
+  value        = module.create_database.password
+}
+
+resource "azurerm_key_vault_secret" "demo_api_client_id" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "demo-api-client-id"
+  value        = module.register_demo_api.client_id
 }

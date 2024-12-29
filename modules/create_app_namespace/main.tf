@@ -80,9 +80,9 @@ resource "kubernetes_role" "role" {
   }
 }
 
-resource "kubernetes_secret" "secret" {
+resource "kubernetes_secret" "service_account_token_secret" {
   metadata {
-    name      = var.k8s_namespace
+    name      = "service-account-token"
     namespace = var.k8s_namespace
     annotations = {
       "kubernetes.io/service-account.name" = kubernetes_service_account.service_account.metadata.0.name

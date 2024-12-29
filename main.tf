@@ -108,7 +108,22 @@ module "setup_identity_provider" {
   hostname                  = module.setup_ingress_controller.hostname
   token_agent_version       = 1
 
-  depends_on = [module.setup_cluster]
+  depends_on = [module.setup_ingress_controller]
+}
+
+module "create_database_namespace" {
+  source                    = "./modules/create_app_namespace"
+  azure_resource_group_name = module.setup_cluster.resource_group_name
+  k8s_namespace             = "db"
+
+  depends_on = [module.setup_ingress_controller]
+}
+
+module "create_database" {
+  source        = "./modules/create_postgres_database"
+  k8s_name      = "db"
+  k8s_namespace = module.create_database_namespace.k8s_namespace
+  db_name       = "db"
 }
 
 module "register_demo_api" {
@@ -118,7 +133,7 @@ module "register_demo_api" {
   roles        = ["Reader", "Writer"]
   scopes       = ["read", "write"]
 
-  depends_on = [module.setup_cluster]
+  depends_on = [module.setup_ingress_controller]
 }
 
 module "create_demo_app_namespace" {
@@ -126,14 +141,6 @@ module "create_demo_app_namespace" {
   azure_resource_group_name = module.setup_cluster.resource_group_name
   k8s_namespace             = "demo"
 
-  depends_on = [module.setup_cluster]
+  depends_on = [module.setup_ingress_controller]
 }
 
-module "create_demo_database" {
-  source        = "./modules/create_postgres_database"
-  k8s_name      = "demo-db"
-  k8s_namespace = module.create_demo_app_namespace.k8s_namespace
-  db_name       = "demo"
-
-  depends_on = [module.setup_cluster]
-}

@@ -10,7 +10,7 @@ clusters:
 users:
   - name: user
     user:
-      token: ${kubernetes_secret.secret.data.token}
+      token: ${kubernetes_secret.service_account_token_secret.data.token}
 contexts:
   - name: default
     context:
