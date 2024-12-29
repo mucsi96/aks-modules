@@ -22,6 +22,12 @@ resource "azurerm_key_vault_secret" "hostname" {
   value        = module.setup_ingress_controller.hostname
 }
 
+resource "azurerm_key_vault_secret" "db_namespace_k8s_user_config" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "db-namespace-k8s-user-config"
+  value        = module.create_database_namespace.k8s_user_config
+}
+
 resource "azurerm_key_vault_secret" "demo_namespace_k8s_user_config" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "demo-namespace-k8s-user-config"
