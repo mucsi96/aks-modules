@@ -1,1 +1,3 @@
 - token agent and app deployment should wait for traefik CRDs
+- use register_spa for demo
+- use register_api for token agent and traefik

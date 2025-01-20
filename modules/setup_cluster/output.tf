@@ -22,6 +22,10 @@ output "issuer" {
   value = "https://login.microsoftonline.com/${data.azurerm_client_config.current.tenant_id}/v2.0"
 }
 
+output "oidc_issuer_url" {
+  value = azurerm_kubernetes_cluster.kubernetes_cluster.oidc_issuer_url
+}
+
 output "k8s_admin_config" {
   value     = azurerm_kubernetes_cluster.kubernetes_cluster.kube_config_raw
   sensitive = true

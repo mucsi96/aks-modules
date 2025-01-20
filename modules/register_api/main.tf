@@ -12,6 +12,7 @@ resource "azuread_application" "api" {
 
   dynamic "app_role" {
     for_each = toset(var.roles)
+
     content {
       allowed_member_types = ["User"]
       description          = "${var.display_name} ${app_role.value} role"
@@ -26,6 +27,7 @@ resource "azuread_application" "api" {
 
     dynamic "oauth2_permission_scope" {
       for_each = toset(var.scopes)
+
       content {
         admin_consent_description  = "${var.display_name} ${oauth2_permission_scope.value} scope"
         admin_consent_display_name = "${var.display_name} ${oauth2_permission_scope.value} scope"
@@ -42,5 +44,17 @@ resource "azuread_application_identifier_uri" "app_uri" {
 }
 
 resource "azuread_service_principal" "service_principal" {
-  client_id = azuread_application.api.client_id
+  client_id                    = azuread_application.api.client_id
+  owners                       = [var.owner]
+  tags                         = ["WindowsAzureActiveDirectoryIntegratedApp"]
+  app_role_assignment_required = false
+}
+
+resource "azuread_application_federated_identity_credential" "federated_identity_credential" {
+  application_id = azuread_application.api.id
+  display_name   = replace(lower(var.display_name), " ", "-")
+  description    = var.display_name
+  audiences      = ["api://AzureADTokenExchange"]
+  issuer         = var.k8s_oidc_issuer_url
+  subject        = "system:serviceaccount:${var.k8s_service_account_namespace}:${var.k8s_service_account_name}"
 }

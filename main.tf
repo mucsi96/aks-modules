@@ -126,12 +126,16 @@ module "create_database" {
   db_name       = "db"
 }
 
-module "register_demo_api" {
-  source       = "./modules/register_api"
-  owner        = module.setup_cluster.owner
-  display_name = "Demo API"
-  roles        = ["Reader", "Writer"]
-  scopes       = ["read", "write"]
+module "setup_backup_app" {
+  source                    = "./modules/setup_backup_app"
+  azure_resource_group_name = module.setup_cluster.resource_group_name
+  azure_location            = module.setup_cluster.location
+  owner                     = module.setup_cluster.owner
+  k8s_oidc_issuer_url       = module.setup_cluster.oidc_issuer_url
+  hostname                  = module.setup_ingress_controller.hostname
+
+  azure_storage_account_resource_group_name = "ibari"
+  azure_storage_account_name                = "ibari"
 
   depends_on = [module.setup_ingress_controller]
 }
@@ -140,6 +144,20 @@ module "create_demo_app_namespace" {
   source                    = "./modules/create_app_namespace"
   azure_resource_group_name = module.setup_cluster.resource_group_name
   k8s_namespace             = "demo"
+
+  depends_on = [module.setup_ingress_controller]
+}
+
+module "register_demo_api" {
+  source       = "./modules/register_api"
+  owner        = module.setup_cluster.owner
+  display_name = "Demo API"
+  roles        = ["Reader", "Writer"]
+  scopes       = ["read", "write"]
+
+  k8s_oidc_issuer_url           = module.setup_cluster.oidc_issuer_url
+  k8s_service_account_namespace = "demo"
+  k8s_service_account_name      = "demo-api"
 
   depends_on = [module.setup_ingress_controller]
 }
