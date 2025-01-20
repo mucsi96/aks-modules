@@ -99,18 +99,6 @@ module "setup_ingress_controller" {
   depends_on = [module.setup_cluster]
 }
 
-module "setup_identity_provider" {
-  owner                     = module.setup_cluster.owner
-  issuer                    = module.setup_cluster.issuer
-  source                    = "./modules/setup_identity_provider"
-  azure_resource_group_name = module.setup_cluster.resource_group_name
-  azure_location            = module.setup_cluster.location
-  hostname                  = module.setup_ingress_controller.hostname
-  token_agent_version       = 1
-
-  depends_on = [module.setup_ingress_controller]
-}
-
 module "create_database_namespace" {
   source                    = "./modules/create_app_namespace"
   azure_resource_group_name = module.setup_cluster.resource_group_name

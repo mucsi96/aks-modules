@@ -46,21 +46,6 @@ resource "helm_release" "traefik" {
         }
       }
     }
-    ingressRoute = {
-      dashboard = {
-        enabled     = true
-        matchRule   = "Host(`traefik.${var.resource_group_name}.${var.dns_zone}`)"
-        entryPoints = ["websecure"]
-        tls = {
-          enabled = true
-        }
-        middlewares = [
-          {
-            name = "traefik-dashboard-auth"
-          }
-        ]
-      }
-    }
     extraObjects = [
       {
         apiVersion = "v1"
@@ -71,23 +56,6 @@ resource "helm_release" "traefik" {
         stringData = {
           "tls.crt" = acme_certificate.certificate.certificate_pem
           "tls.key" = acme_certificate.certificate.private_key_pem
-        }
-      },
-      {
-        apiVersion = "traefik.io/v1alpha1"
-        kind       = "Middleware"
-        metadata = {
-          name = "traefik-dashboard-auth"
-        }
-        spec = {
-          forwardAuth = {
-            address = "http://token-agent.identity-provider.svc:8080/authorize?namespace=traefik&scopes=${azuread_application.traefik.client_id}/dashboard-access&requiredRoles=Dashboard.Viewer"
-            addAuthCookiesToResponse = [
-              "accessToken",
-              "refreshToken",
-              "idToken"
-            ]
-          }
         }
       }
     ]
