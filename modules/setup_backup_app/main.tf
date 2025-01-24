@@ -3,6 +3,12 @@ data "azurerm_storage_account" "storage_account" {
   resource_group_name = var.azure_storage_account_resource_group_name
 }
 
+module "create_backup_namespace" {
+  source                    = "../create_app_namespace"
+  azure_resource_group_name = var.azure_resource_group_name
+  k8s_namespace             = "backup"
+}
+
 module "setup_backup_api" {
   source = "../register_api"
   owner  = var.owner
@@ -12,7 +18,7 @@ module "setup_backup_api" {
   scopes       = ["write"]
 
   k8s_oidc_issuer_url           = var.k8s_oidc_issuer_url
-  k8s_service_account_namespace = "demo"
+  k8s_service_account_namespace = "backup"
   k8s_service_account_name      = "backup-api"
 }
 

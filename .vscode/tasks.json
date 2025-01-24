@@ -64,16 +64,6 @@
     },
     {
       "type": "shell",
-      "command": "bash",
-      "label": "Deploy demo app",
-      "args": ["scripts/deploy_demo_app.sh"],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": []
-    },
-    {
-      "type": "shell",
       "command": "ansible-vault encrypt vars/vault.yaml --vault-password-file .ansible/vault_key",
       "label": "Encrypt vault",
       "problemMatcher": []

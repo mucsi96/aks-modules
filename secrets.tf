@@ -28,26 +28,20 @@ resource "azurerm_key_vault_secret" "db_namespace_k8s_user_config" {
   value        = module.create_database_namespace.k8s_user_config
 }
 
-resource "azurerm_key_vault_secret" "demo_namespace_k8s_user_config" {
-  key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "demo-namespace-k8s-user-config"
-  value        = module.create_demo_app_namespace.k8s_user_config
-}
-
-resource "azurerm_key_vault_secret" "demo_db_username" {
+resource "azurerm_key_vault_secret" "db_username" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "db-username"
   value        = module.create_database.username
 }
 
-resource "azurerm_key_vault_secret" "demo_db_password" {
+resource "azurerm_key_vault_secret" "db_password" {
   key_vault_id = data.azurerm_key_vault.kv.id
   name         = "db-password"
   value        = module.create_database.password
 }
 
-resource "azurerm_key_vault_secret" "demo_api_client_id" {
+resource "azurerm_key_vault_secret" "backup_namespace_k8s_user_config" {
   key_vault_id = data.azurerm_key_vault.kv.id
-  name         = "demo-api-client-id"
-  value        = module.register_demo_api.client_id
+  name         = "backup-namespace-k8s-user-config"
+  value        = module.setup_backup_app.k8s_user_config
 }

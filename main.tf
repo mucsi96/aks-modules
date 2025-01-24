@@ -128,25 +128,3 @@ module "setup_backup_app" {
   depends_on = [module.setup_ingress_controller]
 }
 
-module "create_demo_app_namespace" {
-  source                    = "./modules/create_app_namespace"
-  azure_resource_group_name = module.setup_cluster.resource_group_name
-  k8s_namespace             = "demo"
-
-  depends_on = [module.setup_ingress_controller]
-}
-
-module "register_demo_api" {
-  source       = "./modules/register_api"
-  owner        = module.setup_cluster.owner
-  display_name = "Demo API"
-  roles        = ["Reader", "Writer"]
-  scopes       = ["read", "write"]
-
-  k8s_oidc_issuer_url           = module.setup_cluster.oidc_issuer_url
-  k8s_service_account_namespace = "demo"
-  k8s_service_account_name      = "demo-api"
-
-  depends_on = [module.setup_ingress_controller]
-}
-
