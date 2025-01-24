@@ -45,3 +45,15 @@ resource "azurerm_key_vault_secret" "backup_namespace_k8s_user_config" {
   name         = "backup-namespace-k8s-user-config"
   value        = module.setup_backup_app.k8s_user_config
 }
+
+resource "azurerm_key_vault_secret" "backup_api_client_id" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "backup-api-client-id"
+  value        = module.setup_backup_app.backup_api_client_id
+}
+
+resource "azurerm_key_vault_secret" "backup_spa_client_id" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  name         = "backup-spa-client-id"
+  value        = module.setup_backup_app.backup_spa_client_id
+}
