@@ -19,7 +19,7 @@ module "setup_backup_api" {
 
   k8s_oidc_issuer_url           = var.k8s_oidc_issuer_url
   k8s_service_account_namespace = "backup"
-  k8s_service_account_name      = "backup-api"
+  k8s_service_account_name      = "postgres-azure-backup"
 }
 
 module "setup_backup_spa" {
