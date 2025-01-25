@@ -14,8 +14,8 @@ module "setup_backup_api" {
   owner  = var.owner
 
   display_name = "Backup API"
-  roles        = ["Contributor"]
-  scopes       = ["write"]
+  roles        = ["DatabaseBackupsReader", "DatabaseBackupCreator", "DatabaseBackupCleaner", "DatabaseBackupRestorer"]
+  scopes       = ["readBackups", "createBackup", "cleanupBackups", "restoreBackup"]
 
   k8s_oidc_issuer_url           = var.k8s_oidc_issuer_url
   k8s_service_account_namespace = "backup"
@@ -27,7 +27,7 @@ module "setup_backup_spa" {
   owner  = var.owner
 
   display_name  = "Backup SPA"
-  redirect_uris = ["https://backup.${var.hostname}/"]
+  redirect_uris = ["https://backup.${var.hostname}/", "http://localhost:4200/auth"]
 
   api_id        = module.setup_backup_api.application_id
   api_client_id = module.setup_backup_api.client_id
