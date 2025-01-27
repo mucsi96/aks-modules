@@ -27,7 +27,7 @@ module "setup_backup_spa" {
   owner  = var.owner
 
   display_name  = "Backup SPA"
-  redirect_uris = ["https://backup.${var.hostname}/", "http://localhost:4200/auth"]
+  redirect_uris = ["https://backup.${var.hostname}/auth", "http://localhost:4200/auth"]
 
   api_id        = module.setup_backup_api.application_id
   api_client_id = module.setup_backup_api.client_id
