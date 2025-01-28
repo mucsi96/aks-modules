@@ -6,8 +6,9 @@ resource "random_string" "db_username" {
 }
 
 resource "random_password" "db_password" {
-  length  = 20
-  special = false
+  length           = 20
+  special          = true
+  override_special = "-_=+:[]{}" // verified: []
 }
 
 resource "random_string" "exporter_username" {
@@ -18,8 +19,9 @@ resource "random_string" "exporter_username" {
 }
 
 resource "random_password" "exporter_password" {
-  length  = 20
-  special = false
+  length           = 20
+  special          = true
+  override_special = "-_=+:[]{}" // verified: []
 }
 
 resource "helm_release" "database" {
