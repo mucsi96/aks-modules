@@ -6,7 +6,8 @@ resource "random_string" "db_username" {
 }
 
 resource "random_password" "db_password" {
-  length = 20
+  length  = 20
+  special = false
 }
 
 resource "random_string" "exporter_username" {
@@ -17,7 +18,8 @@ resource "random_string" "exporter_username" {
 }
 
 resource "random_password" "exporter_password" {
-  length = 20
+  length  = 20
+  special = false
 }
 
 resource "helm_release" "database" {

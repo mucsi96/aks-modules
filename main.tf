@@ -109,9 +109,9 @@ module "create_database_namespace" {
 
 module "create_database" {
   source        = "./modules/create_postgres_database"
-  k8s_name      = "db"
+  k8s_name      = "postgres1"
   k8s_namespace = module.create_database_namespace.k8s_namespace
-  db_name       = "db"
+  db_name       = "postgres1"
 }
 
 module "setup_backup_app" {
