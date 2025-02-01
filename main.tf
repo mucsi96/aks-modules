@@ -128,3 +128,27 @@ module "setup_backup_app" {
   depends_on = [module.setup_ingress_controller]
 }
 
+module "setup_learn_language_api" {
+  source = "./modules/register_api"
+  owner  = module.setup_cluster.owner
+
+  display_name = "Learn Language API"
+  roles        = ["DeckReader", "DeckCreator"]
+  scopes       = ["readDecks", "createDeck"]
+
+  k8s_oidc_issuer_url           = module.setup_cluster.oidc_issuer_url
+  k8s_service_account_namespace = "learn-language"
+  k8s_service_account_name      = "learn-language"
+}
+
+module "setup_learn_language_spa" {
+  source = "./modules/register_spa"
+  owner  = module.setup_cluster.owner
+
+  display_name  = "Learn Language SPA"
+  redirect_uris = ["https://language.${module.setup_ingress_controller.hostname}/auth", "http://localhost:4200/auth"]
+
+  api_id        = module.setup_learn_language_api.application_id
+  api_client_id = module.setup_learn_language_api.client_id
+  api_scope_ids = module.setup_learn_language_api.scope_ids
+}
