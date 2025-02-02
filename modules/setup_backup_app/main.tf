@@ -14,8 +14,8 @@ module "setup_backup_api" {
   owner  = var.owner
 
   display_name = "Backup API"
-  roles        = ["DatabaseBackupsReader", "DatabaseBackupCreator", "DatabaseBackupCleaner", "DatabaseBackupRestorer"]
-  scopes       = ["readBackups", "createBackup", "cleanupBackups", "restoreBackup"]
+  roles        = ["DatabaseBackupsReader", "DatabaseBackupCreator", "DatabaseBackupCleaner", "DatabaseBackupRestorer", "DatabaseBackupDownloader"]
+  scopes       = ["readBackups", "createBackup", "cleanupBackups", "restoreBackup", "downloadBackup"]
 
   k8s_oidc_issuer_url           = var.k8s_oidc_issuer_url
   k8s_service_account_namespace = "backup"

@@ -35,6 +35,12 @@ resource "azuread_app_role_assignment" "allow_admin_user_restore_backups" {
   resource_object_id  = module.setup_backup_app.backup_api_resource_object_id
 }
 
+resource "azuread_app_role_assignment" "allow_admin_user_download_backups" {
+  app_role_id         = module.setup_backup_app.backup_api_roles_ids["DatabaseBackupDownloader"]
+  principal_object_id = module.setup_cluster.owner
+  resource_object_id  = module.setup_backup_app.backup_api_resource_object_id
+}
+
 /**
  * Learn Language
  */
