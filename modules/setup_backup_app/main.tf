@@ -34,6 +34,12 @@ module "setup_backup_spa" {
   api_scope_ids = module.setup_backup_api.scope_ids
 }
 
+resource "azurerm_role_assignment" "allow_backup_api_to_read_storage_account_keys" {
+  scope                = data.azurerm_storage_account.storage_account.id
+  role_definition_name = "Storage Account Key Operator Service Role"
+  principal_id         = module.setup_backup_api.resource_object_id
+}
+
 resource "azurerm_role_assignment" "allow_backup_api_to_write_storage_account" {
   scope                = data.azurerm_storage_account.storage_account.id
   role_definition_name = "Storage Blob Data Contributor"
