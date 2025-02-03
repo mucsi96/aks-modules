@@ -44,11 +44,6 @@ resource "azuread_app_role_assignment" "allow_admin_user_download_backups" {
 /**
  * Learn Language
  */
-resource "azurerm_role_assignment" "allow_learn_language_api_to_read_storage_account_keys" {
-  scope                = data.azurerm_storage_account.storage_account.id
-  role_definition_name = "Storage Account Key Operator Service Role"
-  principal_id         = module.setup_learn_language_api.resource_object_id
-}
 
 resource "azurerm_role_assignment" "allow_learn_language_api_to_read_and_write_learn_language_storage_container" {
   scope                = data.azurerm_storage_container.storage_container.id
