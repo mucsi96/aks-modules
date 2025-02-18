@@ -26,5 +26,29 @@ module "setup_backup_spa" {
 
   api_id        = module.setup_backup_api.application_id
   api_client_id = module.setup_backup_api.client_id
-  api_scope_ids = module.setup_backup_api.scope_ids
+  api_scope_ids = [
+    module.setup_backup_api.scope_ids["readBackups"],
+    module.setup_backup_api.scope_ids["createBackup"],
+    module.setup_backup_api.scope_ids["cleanupBackups"],
+    module.setup_backup_api.scope_ids["restoreBackup"],
+    module.setup_backup_api.scope_ids["downloadBackup"]
+  ]
+}
+
+module "setup_backup_cron_job" {
+  source = "../register_job"
+  owner  = var.owner
+
+  display_name = "Backup Cron Job"
+
+  api_id        = module.setup_backup_api.application_id
+  api_client_id = module.setup_backup_api.client_id
+  api_scope_ids = [
+    module.setup_backup_api.scope_ids["createBackup"],
+    module.setup_backup_api.scope_ids["cleanupBackups"],
+  ]
+
+  k8s_oidc_issuer_url           = var.k8s_oidc_issuer_url
+  k8s_service_account_namespace = "backup"
+  k8s_service_account_name      = "postgres-azure-backup-cron-job"
 }

@@ -7,7 +7,7 @@ output "roles_ids" {
 }
 
 output "scope_ids" {
-  value = [for scope in var.scopes : random_uuid.scope_id[scope].result]
+  value = { for scope in var.scopes : scope => random_uuid.scope_id[scope].result }
 }
 
 output "resource_object_id" {

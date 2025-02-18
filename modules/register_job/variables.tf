@@ -4,20 +4,23 @@ variable "owner" {
 }
 
 variable "display_name" {
-  description = "The display name of the API"
+  description = "The display name of the Job"
   type        = string
 }
 
-variable "roles" {
-  description = "The roles to create for the API"
-  type        = list(string)
-  default     = []
+variable "api_client_id" {
+  description = "The client ID of the API"
+  type        = string
 }
 
-variable "scopes" {
-  description = "The scopes to create for the API"
+variable "api_scope_ids" {
+  description = "The scope IDs of the API"
   type        = list(string)
-  default     = []
+}
+
+variable "api_id" {
+  description = "The ID of the API"
+  type        = string
 }
 
 variable "k8s_oidc_issuer_url" {

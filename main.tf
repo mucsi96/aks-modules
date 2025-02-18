@@ -150,5 +150,8 @@ module "setup_learn_language_spa" {
 
   api_id        = module.setup_learn_language_api.application_id
   api_client_id = module.setup_learn_language_api.client_id
-  api_scope_ids = module.setup_learn_language_api.scope_ids
+  api_scope_ids = [
+    module.setup_learn_language_api.scope_ids["readDecks"],
+    module.setup_learn_language_api.scope_ids["createDeck"]
+  ]
 }

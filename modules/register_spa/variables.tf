@@ -4,7 +4,7 @@ variable "owner" {
 }
 
 variable "display_name" {
-  description = "The display name of the API"
+  description = "The display name of the SPA"
   type        = string
 }
 
