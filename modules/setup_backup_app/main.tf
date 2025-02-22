@@ -47,6 +47,10 @@ module "setup_backup_cron_job" {
     module.setup_backup_api.scope_ids["createBackup"],
     module.setup_backup_api.scope_ids["cleanupBackups"],
   ]
+  api_role_ids = [
+    module.setup_backup_api.roles_ids["DatabaseBackupCreator"],
+    module.setup_backup_api.roles_ids["DatabaseBackupCleaner"],
+  ]
 
   k8s_oidc_issuer_url           = var.k8s_oidc_issuer_url
   k8s_service_account_namespace = "backup"

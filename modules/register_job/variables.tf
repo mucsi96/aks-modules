@@ -18,6 +18,11 @@ variable "api_scope_ids" {
   type        = list(string)
 }
 
+variable "api_role_ids" {
+  description = "The role IDs of the API"
+  type        = list(string)
+}
+
 variable "api_id" {
   description = "The ID of the API"
   type        = string

@@ -18,6 +18,15 @@ resource "azuread_application" "job" {
         type = "Scope"
       }
     }
+
+    dynamic "resource_access" {
+      for_each = var.api_role_ids
+
+      content {
+        id   = resource_access.value
+        type = "Role"
+      }
+    }
   }
 }
 

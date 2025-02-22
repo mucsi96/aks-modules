@@ -58,6 +58,18 @@ resource "azuread_app_role_assignment" "allow_admin_user_download_backups" {
   resource_object_id  = module.setup_backup_app.backup_api_resource_object_id
 }
 
+resource "azuread_app_role_assignment" "allow_backup_job_to_create_backups" {
+  app_role_id         = module.setup_backup_app.backup_api_roles_ids["DatabaseBackupCreator"]
+  principal_object_id = module.setup_backup_app.backup_cron_job_resource_object_id
+  resource_object_id  = module.setup_backup_app.backup_api_resource_object_id
+}
+
+resource "azuread_app_role_assignment" "allow_backup_job_to_cleanup_backups" {
+  app_role_id         = module.setup_backup_app.backup_api_roles_ids["DatabaseBackupCleaner"]
+  principal_object_id = module.setup_backup_app.backup_cron_job_resource_object_id
+  resource_object_id  = module.setup_backup_app.backup_api_resource_object_id
+}
+
 /**
  * Learn Language
  */
