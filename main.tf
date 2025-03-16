@@ -146,7 +146,7 @@ module "setup_learn_language_spa" {
   owner  = module.setup_cluster.owner
 
   display_name  = "Learn Language SPA"
-  redirect_uris = ["https://language.${module.setup_ingress_controller.hostname}/auth", "http://localhost:4200/auth"]
+  redirect_uris = ["https://language.${module.setup_ingress_controller.hostname}/", "http://localhost:4200/"]
 
   api_id        = module.setup_learn_language_api.application_id
   api_client_id = module.setup_learn_language_api.client_id
