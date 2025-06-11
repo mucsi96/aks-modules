@@ -128,6 +128,14 @@ module "setup_backup_app" {
   depends_on = [module.setup_ingress_controller]
 }
 
+module "create_learn_language_namespace" {
+  source                    = "./modules/create_app_namespace"
+  azure_resource_group_name = module.setup_cluster.resource_group_name
+  k8s_namespace             = "learn-language"
+
+  depends_on = [module.setup_ingress_controller]
+}
+
 module "setup_learn_language_api" {
   source = "./modules/register_api"
   owner  = module.setup_cluster.owner
@@ -138,7 +146,7 @@ module "setup_learn_language_api" {
 
   k8s_oidc_issuer_url           = module.setup_cluster.oidc_issuer_url
   k8s_service_account_namespace = "learn-language"
-  k8s_service_account_name      = "learn-language"
+  k8s_service_account_name      = "learn-language-api-workload-identity"
 }
 
 module "setup_learn_language_spa" {

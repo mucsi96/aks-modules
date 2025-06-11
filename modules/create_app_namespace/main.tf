@@ -25,7 +25,7 @@ resource "kubernetes_namespace" "namespace" {
 
 resource "kubernetes_service_account" "service_account" {
   metadata {
-    name      = var.k8s_namespace
+    name      = "${var.k8s_namespace}-namespace-admin"
     namespace = var.k8s_namespace
   }
   automount_service_account_token = false
