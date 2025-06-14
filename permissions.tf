@@ -74,12 +74,6 @@ resource "azuread_app_role_assignment" "allow_backup_job_to_cleanup_backups" {
  * Learn Language
  */
 
-resource "azurerm_role_assignment" "allow_learn_language_api_to_create_user_delegation_keys" {
-  scope                = data.azurerm_storage_account.storage_account.id
-  role_definition_name = "Storage Blob Delegator"
-  principal_id         = module.setup_learn_language_api.resource_object_id
-}
-
 resource "azurerm_role_assignment" "allow_learn_language_api_to_read_and_write_learn_language_storage_container" {
   scope                = data.azurerm_storage_container.learn_language_storage_container.id
   role_definition_name = "Storage Blob Data Contributor"
