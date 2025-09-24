@@ -21,6 +21,11 @@ resource "helm_release" "traefik" {
         enabled = true
       }
     }
+    ingressRoute = {
+      dashboard = {
+        enabled = true
+      }
+    }
     ports = {
       web = {
         redirections = {
