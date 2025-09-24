@@ -23,9 +23,12 @@ resource "helm_release" "traefik" {
     }
     ports = {
       web = {
-        redirectTo = {
-          port   = "websecure"
-          scheme = "https"
+        redirections = {
+          entryPoint = {
+            to        = "websecure"
+            scheme    = "https"
+            permanent = true
+          }
         }
       }
     }

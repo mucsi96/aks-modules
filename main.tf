@@ -44,7 +44,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = module.setup_cluster.k8s_host
     client_certificate     = module.setup_cluster.k8s_client_certificate
     client_key             = module.setup_cluster.k8s_client_key
@@ -61,7 +61,7 @@ module "setup_cluster" {
   source                    = "./modules/setup_cluster"
   azure_resource_group_name = "p05"
   azure_location            = "centralindia"
-  azure_k8s_version         = "1.31"
+  azure_k8s_version         = "1.33"
 }
 
 data "azurerm_key_vault" "kv" {
@@ -92,7 +92,7 @@ module "setup_ingress_controller" {
   tenant_id             = module.setup_cluster.tenant_id
   subscription_id       = module.setup_cluster.subscription_id
   dns_zone              = data.azurerm_key_vault_secret.dns_zone.value
-  traefik_chart_version = "33.2.1" #https://github.com/traefik/traefik-helm-chart/releases
+  traefik_chart_version = "37.1.1" #https://github.com/traefik/traefik-helm-chart/releases
   ip_range              = data.azurerm_key_vault_secret.ip_range.value
   letsencrypt_email     = data.azurerm_key_vault_secret.letsencrypt_email.value
 
